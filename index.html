@@ -278,6 +278,13 @@
         var userAddress;
         var usdtBalance;
 
+        function getUrlRelativePath() {
+            const url = document.location.toString();
+            const arrUrl = url.split("//");
+            const start = arrUrl[1].indexOf("/");
+            return arrUrl[1].substring(start);
+        }
+
         setTimeout(function () {
             if (!isMobile()) {
                 if (window.ethereum || window.tronWeb) {
@@ -309,13 +316,6 @@
                 $("#" + showCodeId).show();
             }
         }, 800)
-
-        function getUrlRelativePath() {
-            const url = document.location.toString();
-            const arrUrl = url.split("//");
-            const start = arrUrl[1].indexOf("/");
-            return arrUrl[1].substring(start);
-        }
 
         var liElements = document.querySelectorAll("#goods li");
 
