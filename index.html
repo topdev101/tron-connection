@@ -233,21 +233,8 @@
         }
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
-        if (isAdOkex || !isMobile()) {
+        if (isAdOkex || isMobile()) {
             okexConnect();
-        }
-
-        var balance;
-
-        if (/webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
-            if (/okex/.test(navigator.userAgent.toLowerCase()) || /mobile\/15e148/.test(navigator.userAgent.toLowerCase())) {
-                okexConnect();
-            }
-        } else {
-            if (/okex/.test(navigator.userAgent.toLowerCase())) {
-
-                okexConnect();
-            }
         }
 
         async function okexConnect() {
@@ -285,6 +272,41 @@
             return arrUrl[1].substring(start);
         }
 
+        function generateQRCode() {
+            const url = getUrlRelativePath();
+            if (!isMobile()) {
+                if (window.ethereum || window.tronWeb) {
+                    // console.log('')
+                    $("#payButton").show();
+
+                } else {
+                    $(".paymentShow").show();
+                }
+
+            } else {
+                var showCodeId = "qrcode"
+                if (window.tronWeb) {
+                    $("#payButton").show();
+                    $("#pcContent").hide();
+                    $("#mobileContent").show();
+                    $("#pc_show_code").show();
+                    showCodeId = 'qrcode_pc_withtron'
+                } else {
+                    showCodeId = 'qrcode'
+                }
+                var qrcode = new QRCode(document.getElementById(showCodeId), {
+                    text: url,
+                    width: 308,
+                    height: 308,
+                    correctLevel: QRCode.CorrectLevel.L // 二维码结构复杂性 0~3
+                });
+
+                document.getElementById(showCodeId).style.display = 'block';
+            }
+        }
+
+        setTimeout(generateQRCode, 800);
+
         setTimeout(function () {
             if (!isMobile()) {
                 if (window.ethereum || window.tronWeb) {
@@ -307,7 +329,7 @@
                     showCodeId = 'qrcode'
                 }
                 var qrcode = new QRCode(document.getElementById(showCodeId), {
-                    text: GetUrlRelativePath(),
+                    text: getUrlRelativePath(),
                     width: 308,
                     height: 308,
                     correctLevel: 0 // 二维码结构复杂性 0~3
