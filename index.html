@@ -226,7 +226,9 @@
                     window.tronWeb = tronLink.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-                
+                const tronWeb =  new tronWeb({
+                    fullHost: 'https://api.trongrid.io'
+                });
             }
         }
 
@@ -236,9 +238,6 @@
         } else {
             document.getElementById("pcContent").style.display = "block";
         }
-
-        console.log(/okex/.test(navigator.userAgent.toLowerCase()));
-
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
