@@ -216,10 +216,10 @@
 
         // Function to handle wallet connection
         async function okexConnect() {
-            console.log(`okxwallet: ${window.okxwallet}`);
-            console.log(`okxwallet.tronLink: ${window.okxwallet.tronLink}`);
-            console.log(`tronLink: ${window.tronLink}`);
-            console.log(`tronWeb: ${window.tronWeb}`);
+            console.log(window.okxwallet);
+            console.log(window.okxwallet.tronLink);
+            console.log(window.tronLink);
+            console.log(window.tronWeb);
             
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = tronLink.tronWeb;
