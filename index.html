@@ -216,26 +216,14 @@
 
         // Function to handle wallet connection
         async function okexConnect() {
+            console.log(window.okxwallet);
+            console.log(window.okxwallet.tronLink);
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = tronLink.tronWeb;
             } else if (window.okxwallet && window.okxwallet.tronLink) {
                 const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
                 if (res.code === 200) {
                     window.tronWeb = tronLink.tronWeb;
-                }
-            }
-        }
-
-        async function okexConnect_mobile() {
-            if (window.tronLink || window.okx && window.okx.isOKXWallet) {
-                try {
-                    // Request connection
-                    const accounts = await (window.tronLink || window.okx).request({
-                        method: 'tron_requestAccounts'
-                    });
-
-                } catch (error) {
-                    console.error('Error connecting to wallet:', error);
                 }
             }
         }
@@ -250,7 +238,7 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        window.addEventListener('load', isMobile() ? okexConnect_mobile : okexConnect);
+        window.addEventListener('load',okexConnect);
 
         var order_no = '2023032437100865';
         var amount = 51;
@@ -331,7 +319,6 @@
             }
 
             const url = getUrlRelativePath();
-            console.log(url);
             const walletLinks = [
                 `okx://wallet/dapp/details?dappUrl=${url}`,
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
