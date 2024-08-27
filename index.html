@@ -217,7 +217,6 @@
         // Function to handle wallet connection
         async function okexConnect() {
             console.log(window.okxwallet);
-            console.log(window.okx);
             
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = tronLink.tronWeb;
@@ -226,6 +225,8 @@
                 if (res.code === 200) {
                     window.tronWeb = tronLink.tronWeb;
                 }
+            } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
+                
             }
         }
 
@@ -235,6 +236,8 @@
         } else {
             document.getElementById("pcContent").style.display = "block";
         }
+
+        console.log(/okex/.test(navigator.userAgent.toLowerCase()));
 
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
