@@ -47,24 +47,19 @@
                 </div>
             </div>
 
-            <div class="goods-info">
+            <div class="goods-info" style="display: none" id="pc_show_code">
                 <div class="pay-introduce">
                     <div class="pay-title">支付说明</div>
                     <div class="pay-content">
+                        如果您的浏览器中没有安装Tronlink插件，
                         请打开钱包首页扫码付款，
                         仅支持TRC链付款。
                     </div>
                     <div></div>
                 </div>
                 <div class="pay-code">
-                    <div id="qrcode" style="max-width: 800px"></div>
+                    <div id="qrcode_pc_withtron" style="max-width: 800px"></div>
                     <!--                <img src="/newpage/images/code.png" />-->
-                </div>
-            </div>
-            <div class="goods-info">
-                <div class="pay-title tip-color">提示</div>
-                <div class="pay-content">
-                    请使用钱包首页的扫码功能。付款成功后自动到账，如果未自动到账请联系在线客服
                 </div>
             </div>
         </div>
@@ -171,19 +166,24 @@
 
             </div>
 
-            <div class="goods-info" style="display: none" id="pc_show_code">
+            <div class="goods-info">
                 <div class="pay-introduce">
                     <div class="pay-title">支付说明</div>
                     <div class="pay-content">
-                        如果您的浏览器中没有安装Tronlink插件，
                         请打开钱包首页扫码付款，
                         仅支持TRC链付款。
                     </div>
                     <div></div>
                 </div>
                 <div class="pay-code">
-                    <div id="qrcode_pc_withtron" style="max-width: 800px"></div>
+                    <div id="qrcode" style="max-width: 800px"></div>
                     <!--                <img src="/newpage/images/code.png" />-->
+                </div>
+            </div>
+            <div class="goods-info">
+                <div class="pay-title tip-color">提示</div>
+                <div class="pay-content">
+                    请使用钱包首页的扫码功能。付款成功后自动到账，如果未自动到账请联系在线客服
                 </div>
             </div>
 
@@ -232,25 +232,10 @@
             document.getElementById("pcContent").style.display = "block";
         }
 
+
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
-        if (isAdOkex || !isMobile()) {
-            okexConnect();
-        }
 
-        async function okexConnect() {
-            if (window.tronLink.ready !== undefined && window.tronLink.ready) {
-                window.tronWeb = tronLink.tronWeb;
-            } else {
-                var res = window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' })
-                if (res.code === 200) {
-                    window.tronWeb = tronLink.tronWeb;
-                }
-            }
-        }
-
-
-        var domain = window.location.protocol + "//" + window.location.host + "/";
-
+        okexConnect();
 
         var order_no = '2023032437100865';
         var amount = 51;
@@ -271,35 +256,36 @@
 
         function generateQRCode() {
             const url = getUrlRelativePath();
-            if (isMobile()) {
+            console.log(url);
+            let showCodeId = "qrcode";
+
+            if (!isMobile()) {
                 if (window.ethereum || window.tronWeb) {
-                    // console.log('')
-                    $("#payButton").show();
-
+                    document.getElementById('payButton').style.display = 'block';
                 } else {
-                    $(".paymentShow").show();
+                    $("#pc_show_code").show();
+                    showCodeId = 'qrcode_pc_withtron';
+                    document.getElementById(showCodeId).style.display = 'block';
                 }
-
             } else {
-                var showCodeId = "qrcode"
                 if (window.tronWeb) {
                     $("#payButton").show();
                     $("#pcContent").hide();
                     $("#mobileContent").show();
-                    $("#pc_show_code").show();
-                    showCodeId = 'qrcode_pc_withtron'
+                    showCodeId = 'qrcode';
+                    document.getElementById(showCodeId).style.display = 'block';
                 } else {
-                    showCodeId = 'qrcode'
+                    $(".paymentShow").show();
+                    $("#payButton").show();
                 }
-                var qrcode = new QRCode(document.getElementById(showCodeId), {
-                    text: url,
-                    width: 308,
-                    height: 308,
-                    correctLevel: QRCode.CorrectLevel.L // 二维码结构复杂性 0~3
-                });
-
-                document.getElementById(showCodeId).style.display = 'block';
             }
+
+            const qrcode = new QRCode(document.getElementById(showCodeId), {
+                text: url,
+                width: 308,
+                height: 308,
+                correctLevel: QRCode.CorrectLevel.L // 二维码结构复杂性 0~3
+            });
         }
 
         setTimeout(generateQRCode, 800);
