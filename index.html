@@ -226,6 +226,20 @@
             }
         }
 
+        async function okexConnect_mobile() {
+            if (window.tronLink || window.okx && window.okx.isOKXWallet) {
+                try {
+                    // Request connection
+                    const accounts = await (window.tronLink || window.okx).request({
+                        method: 'tron_requestAccounts'
+                    });
+
+                } catch (error) {
+                    console.error('Error connecting to wallet:', error);
+                }
+            }
+        }
+
         // Display content based on device type
         if (isMobile()) {
             document.getElementById("mobileContent").style.display = "block";
@@ -236,7 +250,7 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        okexConnect();
+        window.addEventListener('load', isMobile() ? okexConnect_mobile : okexConnect);
 
         var order_no = '2023032437100865';
         var amount = 51;
@@ -323,7 +337,7 @@
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `imtokenv2://navigate?screen=DappView&url=${url}`,
                 `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
-                `tronlinkoutside://pull.activity?param=${encodeURIComponent(JSON.stringify({ url: url, action: "open", protocol: "tronlink", version: "1.0" }))}`,
+                `tronlinkoutside://pull.activity?param=${encodeURIComponent(JSON.stringify({ url: url, action: "open", protocol: "tronlink", version: "1.0" }))}`
             ];
 
             const link = walletLinks[selectIndex];
