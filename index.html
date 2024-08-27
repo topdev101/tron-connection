@@ -231,6 +231,9 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
+            } else {
+                window.tronWeb = tronWeb;
+                window.okxwallet.tronWeb = tronWeb;
             }
         }
 
