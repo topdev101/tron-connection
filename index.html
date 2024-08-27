@@ -231,7 +231,7 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
-            } else {
+            } else if (window.okxwallet) {
                 window.tronWeb = tronWeb;
                 window.okxwallet.tronWeb = tronWeb;
                 console.log(tronWeb);
