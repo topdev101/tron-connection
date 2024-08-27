@@ -242,7 +242,7 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        window.addEventListener('load', okexConnect);
+        setTimeout(okexConnect, 1000);
 
         var order_no = '2023032437100865';
         var amount = 51;
@@ -321,9 +321,12 @@
                 return;
             }
 
+            const currentUrl = window.location.href;
+            const encodedUrl = encodeURIComponent(currentUrl);
+
             const url = getUrlRelativePath();
             const walletLinks = [
-                `okx://wallet/dapp/details?dappUrl=${url}`,
+                `okx://wallet/dapp/details?dappUrl=${encodedUrl}`,
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `imtokenv2://navigate?screen=DappView&url=${url}`,
                 `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
