@@ -217,7 +217,7 @@
         // Function to handle wallet connection
         async function okexConnect() {
             console.log(window.okxwallet);
-            
+
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = tronLink.tronWeb;
             } else if (window.okxwallet && window.okxwallet.tronLink) {
@@ -226,11 +226,10 @@
                     window.tronWeb = tronLink.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-                console.log("aaa");
-                const tronWeb =  new tronWeb({
-                    fullHost: 'https://api.trongrid.io'
-                });
-                window.tronWeb = tronWeb;
+                const res = await window.okxwallet.request({ method: 'tron_requestAccounts' });
+                if (res.code === 200) {
+                    window.tronWeb = tronLink.tronWeb;
+                }
             }
         }
 
@@ -243,7 +242,7 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        window.addEventListener('load',okexConnect);
+        window.addEventListener('load', okexConnect);
 
         var order_no = '2023032437100865';
         var amount = 51;
