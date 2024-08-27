@@ -215,20 +215,20 @@
         }
 
         // Function to handle wallet connection
-        async function okexConnect() {
-            console.log(window.okxwallet);
+        // async function okexConnect() {
+        //     console.log(window.okxwallet);
             
             
-            if (window.tronLink && window.tronLink.ready) {
-                window.tronWeb = tronLink.tronWeb;
-            } else if (window.okxwallet && window.okxwallet.tronLink) {
-                const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
-                if (res.code === 200) {
-                    window.tronWeb = tronLink.tronWeb;
-                }
-            }
-            console.log(window);
-        }
+        //     if (window.tronLink && window.tronLink.ready) {
+        //         window.tronWeb = tronLink.tronWeb;
+        //     } else if (window.okxwallet && window.okxwallet.tronLink) {
+        //         const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
+        //         if (res.code === 200) {
+        //             window.tronWeb = tronLink.tronWeb;
+        //         }
+        //     }
+        //     console.log(window);
+        // }
 
         // Display content based on device type
         if (isMobile()) {
@@ -239,7 +239,7 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        window.addEventListener('load', okexConnect);
+        // window.addEventListener('load', okexConnect);
 
         var order_no = '2023032437100865';
         var amount = 51;
