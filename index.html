@@ -165,7 +165,7 @@
                 </div>
 
             </div>
-            <div id="show-qrcode" style="display: none;">
+            <div id="show-qrcode" style="display: none">
                 <div class="goods-info">
                     <div class="pay-introduce">
                         <div class="pay-title">支付说明</div>
@@ -273,13 +273,13 @@
                     $("#payButton").show();
                     $("#pcContent").hide();
                     $("#mobileContent").show();
-                    $("show-qrcode").show();
+                    $("#show-qrcode").show();
                     showCodeId = 'qrcode';
                     document.getElementById(showCodeId).style.display = 'block';
                 } else {
                     $(".paymentShow").show();
                     $("#payButton").show();
-                    $("show-qrcode").hide();
+                    $("#show-qrcode").hide();
                 }
             }
 
