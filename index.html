@@ -218,6 +218,9 @@
         async function okexConnect() {
             console.log(window.okxwallet);
             console.log(window.okxwallet.tronLink);
+            console.log(window.tronLink);
+            console.log(window.tronWeb);
+            
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = tronLink.tronWeb;
             } else if (window.okxwallet && window.okxwallet.tronLink) {
@@ -259,7 +262,6 @@
 
         function generateQRCode() {
             const url = getUrlRelativePath();
-            console.log(url);
             let showCodeId = "qrcode";
 
             if (!isMobile()) {
