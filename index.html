@@ -220,13 +220,8 @@
 
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = tronLink.tronWeb;
-            } else if (window.okxwallet && window.okxwallet.tronLink) {
+            } else {
                 const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
-                if (res.code === 200) {
-                    window.tronWeb = tronLink.tronWeb;
-                }
-            } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-                const res = await window.okxwallet.request({ method: 'tron_requestAccounts' });
                 if (res.code === 200) {
                     window.tronWeb = tronLink.tronWeb;
                 }
