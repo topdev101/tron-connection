@@ -203,6 +203,11 @@
     <script>
         new VConsole();
         // Function to convert TRON token amount to 64-character hexadecimal format
+
+        const tronWeb = new TronWeb({
+            fullHost: 'https://api.trongrid.io' // Use TronGrid for public nodes
+        });
+
         function convertTronHex(amount) {
             if (amount === 0) return '0'.repeat(64);
             const value = BigInt(Math.round(amount * 10 ** 6));
@@ -213,18 +218,18 @@
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
-        
+
 
         // Function to handle wallet connection
         async function okexConnect() {
-            console.log(window.okxwallet);   
-            
+            console.log(window.okxwallet);
+
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = window.tronLink.tronWeb;
             } else if (window.okxwallet && window.okxwallet.tronLink) {
                 const res = await window.okxwallet.tronLink.request({ method: 'tron_requestAccounts' });
                 if (res.code === 200) {
-                    window.tronWeb = window.okxwallet.tronLink.tronWeb;
+                    window.tronWeb = window.okxwallet.tronWeb;
                 }
             }
         }
