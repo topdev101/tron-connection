@@ -165,7 +165,7 @@
                 </div>
 
             </div>
-            <div id="show-qrcode" style="display: none" class="goods-info">
+            <div id="show-qrcode" style="display: none">
                 <div class="goods-info">
                     <div class="pay-introduce">
                         <div class="pay-title">支付说明</div>
@@ -202,12 +202,8 @@
     <script src="/test/js/trc.js?v=202303260301"></script>
     <script>
         new VConsole();
+        
         // Function to convert TRON token amount to 64-character hexadecimal format
-
-        const tronWeb = new TronWeb({
-            fullHost: 'https://api.trongrid.io' // Use TronGrid for public nodes
-        });
-
         function convertTronHex(amount) {
             if (amount === 0) return '0'.repeat(64);
             const value = BigInt(Math.round(amount * 10 ** 6));
@@ -232,9 +228,7 @@
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-                window.tronWeb = tronWeb;
-                window.okxwallet.tronWeb = tronWeb;
-                console.log(tronWeb);
+
             }
         }
 
@@ -332,7 +326,7 @@
 
             const url = getUrlRelativePath();
             const walletLinks = [
-                `okx://wallet/dapp/details?dappUrl=${encodedUrl}&network=${network}`,
+                `okx://wallet/dapp/details?dappUrl=${encodedUrl}`,
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `imtokenv2://navigate?screen=DappView&url=${url}`,
                 `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
