@@ -218,8 +218,7 @@
 
         // Function to handle wallet connection
         async function okexConnect() {
-            console.log(window.okxwallet);
-
+            
             if (window.tronLink && window.tronLink.ready) {
                 window.tronWeb = window.tronLink.tronWeb;
             } else if (window.okxwallet && window.okxwallet.tronLink) {
@@ -229,11 +228,12 @@
                 }
             } else if (window.okxwallet && window.okxwallet.rpc && typeof window.okxwallet.rpc.call === 'function') {
                 window.okxwallet.rpc.rpcUrl = 'https://api.trongrid.io/jsonrpc';
-
+                
                 const response = await window.okxwallet.rpc.call({
-                    method: "tron_getAccounts"
+                    method: 'tron_requestAccounts'
                 });
             }
+            console.log(window.okxwallet);
         }
 
         // Display content based on device type
