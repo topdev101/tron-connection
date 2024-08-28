@@ -255,8 +255,11 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
-            } else if (window.okxwallet && window.okxwallet.rpc) {
+            } else if (window.okxwallet) {
+                console.log("bbb");
+                
                 const res = await adapter.connect();
+                console.log("aaa");
                 log('connect successfully: ', adapter.address);
                 address = adapter.address;
             }
