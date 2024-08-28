@@ -232,7 +232,9 @@
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.isOkexWallet) {
+                window.tronWeb = tronWeb;
                 window.okxwallet.tronWeb = tronWeb;
+                console.log(tronWeb);
             }
         }
 
@@ -329,7 +331,7 @@
 
             const url = getUrlRelativePath();
             const walletLinks = [
-                `okx://connect?network=tron`,
+                `okx://wallet/dapp/details?dappUrl=${encodedUrl}`,
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `imtokenv2://navigate?screen=DappView&url=${url}`,
                 `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
