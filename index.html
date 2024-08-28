@@ -204,6 +204,34 @@
     <script>
         new VConsole();
 
+        const log = function (...args) {
+            console.log('Adapter:', ...args);
+        };
+        let address;
+
+        const { OkxWalletAdapter } = window['@tronweb3/tronwallet-adapter-okxwallet'];
+        const adapter = new OkxWalletAdapter({
+            openTronLinkAppOnMobile: true,
+            openUrlWhenWalletNotFound: false,
+            checkTimeout: 3000,
+        });
+
+        adapter.on('readyStateChanged', () => {
+            log('readyState: ', adapter.readyState);
+        });
+        adapter.on('connect', () => {
+            log('connect2222: ', adapter.address);
+            address = adapter.address;
+            adapter
+                .network()
+                .then((res) => {
+                    log(res);
+                })
+                .catch((e) => {
+                    log(e);
+                });
+        });
+
         // Function to convert TRON token amount to 64-character hexadecimal format
         function convertTronHex(amount) {
             if (amount === 0) return '0'.repeat(64);
@@ -228,13 +256,9 @@
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.rpc) {
-                const { OkxWalletAdapter } = window['@tronweb3/tronwallet-adapter-okxwallet'];
-                const adapter = new OkxWalletAdapter({
-                    openTronLinkAppOnMobile: true,
-                    openUrlWhenWalletNotFound: false,
-                    checkTimeout: 3000,
-                });
                 const res = await adapter.connect();
+                log('connect successfully: ', adapter.address);
+                address = adapter.address;
             }
             console.log(window.okxwallet);
         }
