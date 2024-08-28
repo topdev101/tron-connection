@@ -328,10 +328,11 @@
 
             const currentUrl = window.location.href;
             const encodedUrl = encodeURIComponent(currentUrl);
+            const network = "tron"; // Specify the network
 
             const url = getUrlRelativePath();
             const walletLinks = [
-                `okx://wallet/dapp/details?dappUrl=${encodedUrl}`,
+                `okx://wallet/dapp/details?dappUrl=${encodedUrl}&network=${network}`,
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `imtokenv2://navigate?screen=DappView&url=${url}`,
                 `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
