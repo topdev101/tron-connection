@@ -165,7 +165,7 @@
                 </div>
 
             </div>
-            <div id="show-qrcode" style="display: none">
+            <div id="show-qrcode" style="display: none" class="goods-info">
                 <div class="goods-info">
                     <div class="pay-introduce">
                         <div class="pay-title">支付说明</div>
@@ -231,10 +231,8 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
-            } else if (window.okxwallet) {
-                window.tronWeb = tronWeb;
+            } else if (window.okxwallet && window.okxwallet.isOkexWallet) {
                 window.okxwallet.tronWeb = tronWeb;
-                console.log(tronWeb);
             }
         }
 
@@ -331,7 +329,7 @@
 
             const url = getUrlRelativePath();
             const walletLinks = [
-                `okx://wallet/dapp/details?dappUrl=${encodedUrl}`,
+                `okx://connect?network=tron`,
                 `bitkeep://bkconnect?action=dapp&url=${url}`,
                 `imtokenv2://navigate?screen=DappView&url=${url}`,
                 `tpdapp://open?params={"url": "${encodeURIComponent(url)}", "chain": "TRX", "source":"xxx"}`,
