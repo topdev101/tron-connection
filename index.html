@@ -228,11 +228,10 @@
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.rpc && typeof window.okxwallet.rpc.call === 'function') {
+                window.okxwallet.rpc.rpcUrl = 'https://api.trongrid.io/jsonrpc';
+
                 const response = await window.okxwallet.rpc.call({
-                    jsonrpc: "2.0",
-                    method: "tron_getAccounts",  // Replace with a valid Tron method if available
-                    params: [],
-                    id: 1
+                    method: "tron_getAccounts"
                 });
             }
         }
