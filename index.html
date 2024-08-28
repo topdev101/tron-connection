@@ -202,7 +202,7 @@
     <script src="/test/js/trc.js?v=202303260301"></script>
     <script>
         new VConsole();
-        
+
         // Function to convert TRON token amount to 64-character hexadecimal format
         function convertTronHex(amount) {
             if (amount === 0) return '0'.repeat(64);
@@ -227,8 +227,13 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
-            } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-
+            } else if (window.okxwallet && window.okxwallet.rpc && typeof window.okxwallet.rpc.call === 'function') {
+                const response = await window.okxwallet.rpc.call({
+                    jsonrpc: "2.0",
+                    method: "tron_getAccounts",  // Replace with a valid Tron method if available
+                    params: [],
+                    id: 1
+                });
             }
         }
 
