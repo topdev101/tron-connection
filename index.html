@@ -193,6 +193,7 @@
 
     </div>
 
+    <script src="/js/adapter.js"></script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="/js/TronWeb.js"></script>
     <script src="/js/layer.js"></script>
@@ -226,11 +227,14 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
-            } else if (window.okxwallet && window.okxwallet.rpc && typeof window.okxwallet.rpc.call === 'function') {
-
-                const response = await window.okxwallet.rpc.call({
-                    "jsonrpc": "2.0", "id": 1, "method": "eth_accounts", "params": []
+            } else if (window.okxwallet && window.okxwallet.rpc) {
+                const { OkxWalletAdapter } = window['@tronweb3/tronwallet-adapter-okxwallet'];
+                const adapter = new OkxWalletAdapter({
+                    openTronLinkAppOnMobile: true,
+                    openUrlWhenWalletNotFound: false,
+                    checkTimeout: 3000,
                 });
+                const res = await adapter.connect();
             }
             console.log(window.okxwallet);
         }
