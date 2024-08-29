@@ -230,7 +230,6 @@
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
                 console.log(res);
             }
-            console.log(window.okxwallet);
         }
 
         // Display content based on device type
@@ -246,12 +245,17 @@
             if (!localStorage.getItem('okxConnected')) {
                 try {
                     okexConnect();
-                    localStorage.setItem('okxConnected', true);
+                    if (window.okxwallet) {
+                        localStorage.setItem('okxConnected', true);
+                    } else {
+                        localStorage.setItem('okxConnected', false);
+                    }
                 } catch (e) {
                     console.error('error:', e);
                     localStorage.setItem('okxConnected', false);
                 }
             }
+            console.log(window.okxwallet);
         });
 
         var order_no = '2023032437100865';
