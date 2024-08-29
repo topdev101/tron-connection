@@ -244,7 +244,7 @@
         window.addEventListener('load', async () => {
             if (!localStorage.getItem('okxConnected')) {
                 await okexConnect();
-                if (window.okxwallet) {
+                if (window.okxwallet && /okex/.test(navigator.userAgent.toLowerCase())) {
                     localStorage.setItem('okxConnected', true);
                 } else {
                     localStorage.setItem('okxConnected', false);
