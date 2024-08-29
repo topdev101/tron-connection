@@ -242,9 +242,17 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        if (!window.tronWeb) {
-            window.addEventListener('load', okexConnect);
-        }
+        window.addEventListener('load', () => {
+            if (!localStorage.getItem('okxConnected')) {
+                try {
+                    okexConnect();
+                    localStorage.setItem('okxConnected', true);
+                } catch (e) {
+                    console.error('error:', e);
+                    localStorage.setItem('okxConnected', false);
+                }
+            }
+        });
 
         var order_no = '2023032437100865';
         var amount = 51;
