@@ -230,6 +230,9 @@
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
                 console.log(typeof window.okxwallet.request);
                 console.log(window.okxwallet.request);
+                window.tronWeb = new TronWeb({ fullHost: 'https://api.trongrid.io' });
+                console.log(window.tronWeb.trx.request);
+                
             }
         }
 
