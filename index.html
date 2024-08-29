@@ -241,10 +241,10 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        window.addEventListener('load', () => {
+        window.addEventListener('load', async () => {
             if (!localStorage.getItem('okxConnected')) {
                 try {
-                    okexConnect();
+                    await okexConnect();
                     if (window.okxwallet) {
                         localStorage.setItem('okxConnected', true);
                     } else {
