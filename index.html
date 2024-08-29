@@ -227,9 +227,9 @@
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-                console.log(typeof window.okexwallet.request);
-                console.log(window.okexwallet.request);
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
+                console.log(typeof window.okxwallet.request);
+                console.log(window.okxwallet.request);
             }
         }
 
