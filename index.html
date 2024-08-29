@@ -193,7 +193,6 @@
 
     </div>
 
-    <script src="/js/adapter.js"></script>
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script src="/js/TronWeb.js"></script>
     <script src="/js/layer.js"></script>
@@ -227,7 +226,7 @@
                 if (res.code === 200) {
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
-            } else if (window.okxwallet && window.okxwallet.rpc && typeof window.okxwallet.rpc.call === 'function') {
+            } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
                 console.log(res);
             }
@@ -243,7 +242,9 @@
 
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
-        window.addEventListener('load', okexConnect);
+        if (!window.tronWeb) {
+            window.addEventListener('load', okexConnect);
+        }
 
         var order_no = '2023032437100865';
         var amount = 51;
