@@ -243,6 +243,7 @@
 
         window.addEventListener('load', async () => {
             if(!sessionStorage.getItem('okxConnected')) {
+                console.log(sessionStorage.getItem('okxConnected'));
                 await okexConnect();
             }
         });
