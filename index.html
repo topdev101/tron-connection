@@ -242,6 +242,7 @@
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
         window.addEventListener('load', async () => {
+            console.log(window.okxwallet);
             if (!sessionStorage.getItem('okxConnected')) {
                 await okexConnect();
             }
