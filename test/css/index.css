@@ -192,6 +192,10 @@ hr {
     z-index: 10;
 }
 
+.qr-show {
+    width: 80%;
+}
+
 .mobile-title {
     font-family: Gilroy;
     font-style: normal;
