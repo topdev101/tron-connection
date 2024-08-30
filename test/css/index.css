@@ -259,10 +259,3 @@ ul li {
     background-color: #ccc!important;
     color: #ffffff;
 }
-
-.qr-item {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-}
-
