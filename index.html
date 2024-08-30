@@ -228,7 +228,7 @@
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
-                if (res) sessionStorage.setItem('okxConnected', true);
+                if (res) localStorage.setItem('okxConnected', true);
             }
         }
 
@@ -242,7 +242,7 @@
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
         window.addEventListener('load', async () => {
-            if(!sessionStorage.getItem('okxConnected')) {
+            if(!localStorage.getItem('okxConnected')) {
                 await okexConnect();
             }
         });
