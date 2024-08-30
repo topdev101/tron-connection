@@ -228,7 +228,7 @@
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
-                if (res) sessionStorage.setItem('okxConnectd', 'true');
+                if (res) sessionStorage.setItem('okxConnectd', true);
             }
         }
 
