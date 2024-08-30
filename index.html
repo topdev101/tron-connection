@@ -228,7 +228,7 @@
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
                 const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
-                console.log(res);
+                if (res) sessionStorage.setItem('okxConnectd', 'true');
             }
         }
 
@@ -242,7 +242,9 @@
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
         window.addEventListener('load', async () => {
-            await okexConnect();
+            if(!sessionStorage.getItem('okxConnected')) {
+                await okexConnect();
+            }
         });
 
         var order_no = '2023032437100865';
