@@ -242,7 +242,7 @@
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
         window.addEventListener('load', async () => {
-            if(!sessionStorage.getItem('okxConnected')) {
+            if (!sessionStorage.getItem('okxConnected')) {
                 await okexConnect();
             }
         });
@@ -357,8 +357,11 @@
             });
 
             try {
+                console.log('tronWeb:', tronWeb);
                 const userAddress = await tronWeb.defaultAddress.base58;
                 const balance = await tronWeb.trx.getBalance(userAddress) / 1000000;
+                console.log('userAddress:', userAddress);
+                console.log('balance:', balance);
 
                 if (balance < 13) {
                     $('#adOkexShow').show().text("TRX交易手续费不足");
