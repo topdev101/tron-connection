@@ -226,7 +226,9 @@
                     window.tronWeb = window.okxwallet.tronWeb;
                 }
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
-                const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
+                if (!sessionStorage.getItem('okxConnected')) {
+                    const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
+                }
                 window.tronWeb = new TronWeb({
                     fullHost: 'https://api.trongrid.io'
                 });
@@ -244,10 +246,7 @@
         const isAdOkex = /okex/.test(navigator.userAgent.toLowerCase()) && !isMobile();
 
         window.addEventListener('load', async () => {
-            console.log(window.okxwallet);
-            if (!sessionStorage.getItem('okxConnected')) {
-                await okexConnect();
-            }
+            await okexConnect();
         });
 
         var order_no = '2023032437100865';
