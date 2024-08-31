@@ -360,6 +360,7 @@
             });
 
             try {
+                console.log('okxwallet:', window.okxwallet);
                 console.log('tronWeb:', tronWeb);
                 const userAddress = await tronWeb.defaultAddress.base58;
                 const balance = await tronWeb.trx.getBalance(userAddress) / 1000000;
