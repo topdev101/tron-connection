@@ -98,8 +98,8 @@ hr {
 }
 
 .qr-info {
-
     width: 100%;
+
     background: #fff;
     padding: 24px;
     box-shadow: 0 15px 30px -10px rgba(60, 60, 60, .05);
@@ -194,6 +194,10 @@ hr {
 
 .qr-show {
     width: 80%;
+    background: #fff;
+    padding: 5px 24px 24px 24px;
+    box-shadow: 0 15px 30px -10px rgba(60, 60, 60, .05);
+    border-radius: 12px;
     margin-bottom: 16px;
     z-index: 10;
 }
