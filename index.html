@@ -228,11 +228,11 @@
             } else if (window.okxwallet && window.okxwallet.isOkxWallet) {
                 if (!sessionStorage.getItem('okxConnected')) {
                     const res = await window.okxwallet.request({ method: 'eth_requestAccounts' });
+                    if (res) sessionStorage.setItem('okxConnected', true);
                 }
                 window.tronWeb = new TronWeb({
                     fullHost: 'https://api.trongrid.io'
                 });
-                if (res) sessionStorage.setItem('okxConnected', true);
             }
         }
 
